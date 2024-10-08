@@ -1,0 +1,14 @@
+{
+    "name": "movielens",
+    "version": "1.0.0",
+    "description": "MovieLens website for browsing movies and trailers",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js"
+    },
+    "dependencies": {
+      "express": "^4.17.1",
+      "mongodb": "^4.1.0"
+    }
+  }
+  

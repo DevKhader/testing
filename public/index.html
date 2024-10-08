@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieLens</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>MovieLens</h1>
+        <input type="text" id="searchBar" placeholder="Search by name, actor, genre...">
+    </header>
+
+    <section id="movies-container">
+        <!-- Movies will be dynamically loaded here using app.js -->
+    </section>
+
+    <!-- Modal for Trailer -->
+    <div id="trailer-modal">
+        <span class="close">&times;</span>
+        <video id="trailer-video" controls></video>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
