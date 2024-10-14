@@ -7,19 +7,20 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
+    <header class="header">
         <h1>MovieLens</h1>
-        <input type="text" id="searchBar" placeholder="Search by name, actor, genre...">
+        <input type="text" id="searchBar" placeholder="Search movies...">
     </header>
+    <main>
+        <div id="movies-container"></div>
+    </main>
 
-    <section id="movies-container">
-        <!-- Movies will be dynamically loaded here using app.js -->
-    </section>
-
-    <!-- Modal for Trailer -->
-    <div id="trailer-modal">
+    <!-- Modal for watching trailer -->
+    <div id="trailer-modal" class="modal">
         <span class="close">&times;</span>
-        <video id="trailer-video" controls></video>
+        <div class="modal-content">
+            <!-- The trailer iframe will be injected here -->
+        </div>
     </div>
 
     <script src="app.js"></script>

@@ -4,11 +4,16 @@
     "description": "MovieLens website for browsing movies and trailers",
     "main": "server.js",
     "scripts": {
-      "start": "node server.js"
+        "start": "node server.js"
     },
     "dependencies": {
-      "express": "^4.17.1",
-      "mongodb": "^4.1.0"
-    }
-  }
-  
+        "body-parser": "^1.20.3",
+        "cors": "^2.8.5",
+        "express": "^4.21.1",
+        "mongodb": "^4.17.2",
+        "mongoose": "^8.7.1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}

@@ -1,42 +1,60 @@
 const express = require('express');
-const { MongoClient } = require('mongodb');
+const MongoClient = require('mongodb').MongoClient;
+const cors = require('cors');
+const bodyParser = require('body-parser');
+
 const app = express();
-const port = 3000;
+const PORT = 3000;
+const MONGO_URL = 'mongodb://localhost:27017/movielens'; // Update this if your MongoDB URL is different
 
-const url = 'mongodb://localhost:27017';
-const client = new MongoClient(url);
-const dbName = 'movielens';
-let db, moviesCollection;
+app.use(cors());
+app.use(bodyParser.json());
+app.use(express.static('public')); // Serve static files from the public folder
 
-// Middleware for serving static files (HTML, CSS, JS)
-app.use(express.static('public'));
-
-// Middleware for parsing JSON bodies (for POST requests)
-app.use(express.json());
+let db;
 
 // Connect to MongoDB
-async function connectToMongoDB() {
-    await client.connect();
-    console.log("Connected to MongoDB");
-    db = client.db(dbName);
-    moviesCollection = db.collection('movies');
-}
+MongoClient.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(client => {
+        db = client.db();
+        console.log('Connected to MongoDB');
+        app.listen(PORT, () => {
+            console.log(`Server running at http://localhost:${PORT}`);
+        });
+    })
+    .catch(error => console.error(error));
 
-// Route to get all movies
-app.get('/movies', async (req, res) => {
-    const movies = await moviesCollection.find({}).toArray();
-    res.json(movies);
+// Get movies with search parameters
+app.get('/movies', (req, res) => {
+    const { title, actor, genre } = req.query;  // Get search parameters from query string
+
+    let query = {};
+
+    // If title is provided, search by title (case-insensitive)
+    if (title) {
+        query.title = { $regex: title, $options: 'i' }; // 'i' for case-insensitive matching
+    }
+
+    // If actor is provided, search by actor (case-insensitive)
+    if (actor) {
+        query.actors = { $regex: actor, $options: 'i' }; // Assuming actors is an array of names
+    }
+
+    // If genre is provided, search by genre (case-insensitive)
+    if (genre) {
+        query.genre = { $regex: genre, $options: 'i' }; // Assuming genre is a string
+    }
+
+    // Fetch filtered movies from the database
+    db.collection('movies').find(query).toArray()
+        .then(results => res.json(results))
+        .catch(error => res.status(500).send(error));
 });
 
-// Route to add a new movie
-app.post('/add-movie', async (req, res) => {
-    const newMovie = req.body;
-    await moviesCollection.insertOne(newMovie);
-    res.json({ message: 'Movie added successfully!' });
-});
-
-// Start the server
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-    connectToMongoDB();
+// Add a movie
+app.post('/add-movie', (req, res) => {
+    const movie = req.body;
+    db.collection('movies').insertOne(movie)
+        .then(result => res.json(result))
+        .catch(error => res.status(500).send(error));
 });
